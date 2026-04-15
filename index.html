@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morning Edition — Daily Hacker News Magazine</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0D0D0D;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #C9A84C;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(48px, 10vw, 100px);
+      font-weight: 900;
+      line-height: 0.95;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    h1 em {
+      color: #C9A84C;
+      font-style: italic;
+    }
+
+    .tagline {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.6;
+      margin: 32px 0;
+    }
+
+    .latest-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 16px;
+    }
+
+    .latest-btn {
+      display: inline-block;
+      background: #C9A84C;
+      color: #0D0D0D;
+      padding: 16px 40px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: background 0.2s;
+    }
+
+    .latest-btn:hover { background: white; }
+
+    .past {
+      margin-top: 64px;
+    }
+
+    .past h2 {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 24px;
+    }
+
+    .past-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .past-list a {
+      color: #666;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1a1a1a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .past-list a:hover { color: white; }
+    .past-list a span { color: #C9A84C; }
+
+    .footer {
+      margin-top: 80px;
+      font-size: 12px;
+      color: #333;
+    }
+
+    .footer a { color: #555; text-decoration: none; }
+    .footer a:hover { color: white; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="eyebrow">Daily — Hacker News</div>
+    <h1>Morning<br><em>Edition</em></h1>
+    <p class="tagline">
+      Ten stories, curated for curious minds.<br>
+      No noise. No politics. Just good stuff.
+    </p>
+
+    <div class="latest-label">Today's Edition</div>
+    <a href="/magazines/2026-04-15.html" class="latest-btn">Read the April 15 Edition →</a>
+
+    <div class="past">
+      <h2>Past Editions</h2>
+      <div class="past-list" id="past-list">
+        <a href="/magazines/2026-04-15.html">April 15, 2026 <span>→</span></a>
+      </div>
+    </div>
+
+    <div class="footer">
+      Published daily via <a href="https://github.com/mimed95/morning-edition">mimed95/morning-edition</a>
+    </div>
+  </div>
+
+  <script>
+    // List magazines directory and populate past editions
+    fetch('https://api.github.com/repos/mimed95/morning-edition/contents/magazines')
+      .then(r => r.json())
+      .then(files => {
+        const list = document.getElementById('past-list');
+        files
+          .filter(f => f.name.endsWith('.html'))
+          .sort()
+          .reverse()
+          .slice(1) // skip today
+          .forEach(f => {
+            const date = f.name.replace('.html', '');
+            const d = new Date(date);
+            const label = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            const a = document.createElement('a');
+            a.href = '/magazines/' + f.name;
+            a.innerHTML = label + ' <span>→</span>';
+            list.appendChild(a);
+          });
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>
