@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morning Edition — 2026-04-18</title>
+  <style>
+    
+/* ─── Reset & Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #FAF7F2;
+  --dark: #0D0D0D;
+  --midnight: #0A0F1E;
+  --rose: #F4E4E4;
+  --slate: #2A2D3A;
+  --terminal: #00FF88;
+  --gold: #C9A84C;
+  --charcoal: #1A1A1A;
+  --offwhite: #F5F5F0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--cream);
+  color: #1A1A1A;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+h1, h2, .display { font-family: 'Fraunces', Georgia, serif; }
+
+/* ─── Header ─── */
+.masthead {
+  background: var(--dark);
+  color: white;
+  padding: 80px 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.masthead .edition {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 12px;
+}
+.masthead h1 {
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 900;
+  color: white;
+  line-height: 0.95;
+}
+.masthead h1 em {
+  color: var(--gold);
+  font-style: italic;
+}
+.masthead .tagline {
+  font-size: 16px;
+  color: #888;
+  max-width: 300px;
+  text-align: right;
+  line-height: 1.5;
+}
+
+/* ─── Stories Grid ─── */
+.stories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+/* ─── SPREAD 1: HERO ─── */
+.spread.hero {
+  background: var(--dark);
+  color: white;
+  padding: 100px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+  min-height: 600px;
+}
+.spread.hero .numeral {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(120px, 18vw, 240px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.08);
+  line-height: 1;
+  user-select: none;
+}
+.spread.hero .domain {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 16px;
+}
+.spread.hero h1 {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  color: white;
+}
+.spread.hero .summary {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.spread.hero .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 32px;
+}
+.spread.hero .read-link {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--dark);
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.spread.hero .read-link:hover { background: white; }
+
+/* ─── SPREAD 2: EDITORIAL ─── */
+.spread.editorial {
+  background: var(--cream);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 24px;
+  min-height: 600px;
+  justify-content: start;
+}
+.spread.editorial .eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+}
+.spread.editorial .eyebrow .num {
+  font-family: 'Fraunces', serif;
+  font-size: 48px;
+  color: var(--gold);
+  font-style: italic;
+  margin-right: 8px;
+}
+.spread.editorial h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 700;
+  line-height: 1.1;
+  max-width: 700px;
+  color: #1A1A1A;
+}
+.spread.editorial blockquote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(20px, 3vw, 32px);
+  font-style: italic;
+  line-height: 1.5;
+  color: #555;
+  border-left: 4px solid var(--gold);
+  padding-left: 24px;
+  max-width: 700px;
+}
+.spread.editorial .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: #888;
+  align-items: center;
+}
+.spread.editorial .meta a {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ─── SPREAD 3: MIDNIGHT ─── */
+.spread.midnight {
+  background: var(--midnight);
+  color: white;
+  padding: 80px 60px;
+  font-family: 'Courier New', monospace;
+}
+.spread.midnight .terminal-header {
+  font-size: 13px;
+  color: var(--terminal);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.spread.midnight .prompt {
+  background: var(--terminal);
+  color: var(--midnight);
+  padding: 2px 8px;
+  font-weight: bold;
+  border-radius: 3px;
+}
+.spread.midnight h1.title {
+  font-size: clamp(22px, 3.5vw, 44px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  color: white;
+}
+.spread.midnight .summary {
+  font-size: 17px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.spread.midnight .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 32px;
+}
+.spread.midnight .cmd {
+  font-size: 14px;
+  color: var(--terminal);
+  text-decoration: none;
+  border: 1px solid var(--terminal);
+  padding: 10px 20px;
+  display: inline-block;
+}
+.spread.midnight .cmd:hover { background: var(--terminal); color: var(--midnight); }
+
+/* ─── SPREAD 4: ROSE ─── */
+.spread.rose {
+  background: var(--rose);
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.spread.rose .stamp {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(100px, 16vw, 200px);
+  font-weight: 900;
+  font-style: italic;
+  color: rgba(180,60,60,0.18);
+  line-height: 1;
+  user-select: none;
+}
+.spread.rose .tag {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8B4444;
+  display: block;
+  margin-bottom: 12px;
+}
+.spread.rose h1 {
+  font-size: clamp(22px, 3.5vw, 42px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: #1A1A1A;
+}
+.spread.rose .summary {
+  font-size: 17px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.spread.rose a {
+  font-size: 13px;
+  font-weight: 600;
+  color: #8B4444;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.spread.rose a:hover { text-decoration: underline; }
+
+/* ─── SPREAD 5: ACADEMIC ─── */
+.spread.academic {
+  background: var(--offwhite);
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.spread.academic .footnote {
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+  color: #999;
+  padding-top: 8px;
+}
+.spread.academic h1 {
+  font-size: clamp(20px, 3vw, 38px);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  color: #1A1A1A;
+}
+.spread.academic .source {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+  display: block;
+  margin-bottom: 20px;
+}
+.spread.academic .body {
+  font-size: 17px;
+  color: #555;
+  line-height: 1.75;
+  margin-bottom: 24px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+}
+.spread.academic .meta {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+  color: #999;
+  align-items: center;
+}
+.spread.academic .meta a {
+  color: #888;
+  text-decoration: none;
+  font-weight: 500;
+}
+.spread.academic .meta a:hover { color: #1A1A1A; }
+
+/* ─── SPREAD 6: BRUTALIST ─── */
+.spread.brutalist {
+  background: #000;
+  color: white;
+  padding: 80px 60px;
+  border-right: 4px solid var(--gold);
+}
+.spread.brutalist .num {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(80px, 14vw, 180px);
+  font-weight: 900;
+  color: white;
+  line-height: 1;
+  margin-bottom: 24px;
+  letter-spacing: -0.05em;
+}
+.spread.brutalist h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(24px, 4vw, 56px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 24px;
+  color: white;
+}
+.spread.brutalist .meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 24px;
+}
+.spread.brutalist .summary {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 560px;
+}
+.spread.brutalist .link {
+  display: inline-block;
+  background: white;
+  color: black;
+  padding: 14px 28px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.spread.brutalist .link:hover { background: var(--gold); }
+
+/* ─── SPREAD 7: BIG-STAT ─── */
+.spread.bigstat {
+  background: white;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto auto;
+  gap: 0 40px;
+  align-items: start;
+}
+.spread.bigstat .giant-num {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(100px, 18vw, 220px);
+  font-weight: 900;
+  font-style: italic;
+  color: #1A1A1A;
+  line-height: 1;
+  grid-row: 1 / 5;
+}
+.spread.bigstat .divider {
+  height: 3px;
+  background: var(--gold);
+  width: 80px;
+  margin-bottom: 24px;
+  grid-column: 2;
+}
+.spread.bigstat h1 {
+  font-size: clamp(20px, 3vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1A1A1A;
+  grid-column: 2;
+  margin-bottom: 16px;
+}
+.spread.bigstat .summary {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.7;
+  grid-column: 2;
+  margin-bottom: 24px;
+}
+.spread.bigstat .meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #999;
+  grid-column: 2;
+  margin-bottom: 24px;
+}
+.spread.bigstat a {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1A1A;
+  text-decoration: none;
+  grid-column: 2;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 2px;
+  display: inline-block;
+}
+
+/* ─── SPREAD 8: MAGAZINE OPENER ─── */
+.spread.magazine-opener {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: white;
+  padding: 100px 60px;
+  display: grid;
+  grid-template-rows: auto auto auto auto auto;
+  gap: 20px;
+  min-height: 600px;
+  justify-content: start;
+}
+.spread.magazine-opener .issue-num {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+.spread.magazine-opener h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 6vw, 80px);
+  font-weight: 800;
+  line-height: 1.05;
+  color: white;
+  max-width: 800px;
+}
+.spread.magazine-opener .summary {
+  font-size: 18px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  max-width: 600px;
+}
+.spread.magazine-opener .meta {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+}
+.spread.magazine-opener .meta .domain { color: var(--gold); }
+.spread.magazine-opener .cta {
+  display: inline-block;
+  background: white;
+  color: #1a1a2e;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  align-self: start;
+  width: fit-content;
+}
+.spread.magazine-opener .cta:hover { background: var(--gold); }
+
+/* ─── SPREAD 9: NOIR ─── */
+.spread.noir {
+  background: var(--charcoal);
+  color: white;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.spread.noir .numeral {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(100px, 16vw, 200px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.05);
+  line-height: 1;
+  user-select: none;
+}
+.spread.noir h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(22px, 3.5vw, 44px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: white;
+  margin-bottom: 12px;
+}
+.spread.noir .domain {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  display: block;
+  margin-bottom: 20px;
+}
+.spread.noir .summary {
+  font-size: 17px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.spread.noir .meta {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 28px;
+}
+.spread.noir a {
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 2px;
+}
+.spread.noir a:hover { border-color: white; }
+
+/* ─── SPREAD 10: INDEX CARD ─── */
+.spread.index-card {
+  background: #FAFAFA;
+  padding: 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 16px 32px;
+  align-items: start;
+  border: 1px solid #E0E0E0;
+}
+.spread.index-card .card-num {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  background: #1A1A1A;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  grid-row: 1;
+}
+.spread.index-card h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(18px, 2.5vw, 28px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1A1A1A;
+  grid-column: 2;
+  grid-row: 1;
+}
+.spread.index-card .summary {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.65;
+  grid-column: 2;
+  grid-row: 2;
+}
+.spread.index-card .meta {
+  grid-column: 1 / 3;
+  grid-row: 3;
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: #999;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.spread.index-card .meta .domain { color: var(--gold); font-weight: 600; }
+.spread.index-card .meta a { color: #555; text-decoration: none; margin-left: auto; font-weight: 600; }
+.spread.index-card .meta a:hover { color: #1A1A1A; }
+
+/* ─── Footer ─── */
+.footer {
+  background: var(--dark);
+  color: #555;
+  padding: 40px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.footer a { color: #888; text-decoration: none; }
+.footer a:hover { color: white; }
+
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div>
+    <div class="edition">Morning Edition — APRIL 18, 2026</div>
+    <h1>Hacker<br><em>News</em></h1>
+  </div>
+  <div class="tagline">
+    Ten stories curated for curious minds.<br>
+    No noise. No politics.<br>
+    Just good stuff.
+  </div>
+</header>
+
+<main class="stories">
+<section class="spread hero">
+  <div class="numeral">1</div>
+  <div class="content">
+    <span class="domain">https:</span>
+    <h1>All 12 moonwalkers had "lunar hay fever" from dust smelling like gunpowder (2018)</h1>
+    <p class="summary">A technical deep-dive that doesn't talk down to you. Exactly the kind of thing HN does best.</p>
+    <div class="meta">
+      <span class="score">298 pts</span>
+      <span class="comments">170 comments</span>
+    </div>
+    <a href="https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/The_toxic_side_of_the_Moon" class="read-link">Read the story →</a>
+  </div>
+</section>
+
+<section class="spread editorial">
+  <div class="eyebrow"><span class="num">2</span> — https:</div>
+  <h1>Claude Design</h1>
+  <blockquote>Anthropic's latest model handles long contexts better than anything before it.</blockquote>
+  <div class="meta">
+    <span class="score">974 pts</span>
+    <span class="comments">640 comments</span>
+    <a href="https://www.anthropic.com/news/claude-design-anthropic-labs">Read →</a>
+  </div>
+</section>
+
+<section class="spread midnight">
+  <div class="terminal-header">
+    <span class="prompt">$</span> https:
+  </div>
+  <h1 class="title">Measuring Claude 4.7's tokenizer costs</h1>
+  <p class="summary">Anthropic's latest model handles long contexts better than anything before it.</p>
+  <div class="meta">
+    <span class="score">&gt; 578 pts</span>
+    <span class="comments">// 403 comments</span>
+  </div>
+  <a href="https://www.claudecodecamp.com/p/i-measured-claude-4-7-s-new-tokenizer-here-s-what-it-costs-you" class="cmd">curl https://www.claudecodecamp.com/p/i-measured-claude-4-7-s-new-tokenizer-here-s-what-it-costs-you</a>
+</section>
+
+<section class="spread rose">
+  <div class="stamp">4</div>
+  <div class="content">
+    <span class="tag">https:</span>
+    <h1>The Gregorio project – GPL tools for typesetting Gregorian chant</h1>
+    <p class="summary">A new tool that makes something hard feel effortless. Already replacing three things I used to use.</p>
+    <a href="https://gregorio-project.github.io/index.html">60 pts — 9 comments →</a>
+  </div>
+</section>
+
+<section class="spread academic">
+  <div class="footnote">[5]</div>
+  <div class="content">
+    <h1>Solitaire simulator for finding the best strategy: Current record is 8.590%</h1>
+    <span class="source">https:</span>
+    <p class="body">Another AI paper that will quietly change how products are built.</p>
+    <div class="meta">
+      <span>44 points</span>
+      <span>21 comments</span>
+      <a href="https://github.com/dacracot/Klondike3-Simulator">DOI link →</a>
+    </div>
+  </div>
+</section>
+
+<section class="spread brutalist">
+  <div class="num">6</div>
+  <h1>"Liberation Day" at OpenAI as multiple senior executives announce leaving</h1>
+  <div class="meta">
+    <span>https:</span>
+    <span>3pts</span>
+    <span>0c</span>
+  </div>
+  <p class="summary">Another AI paper that will quietly change how products are built.</p>
+  <a href="https://mas.to/@carnage4life/116422881496195720" class="link">READ MORE</a>
+</section>
+
+<section class="spread bigstat">
+  <div class="giant-num">7</div>
+  <div class="divider"></div>
+  <h1>Isaac Asimov: The Last Question (1956)</h1>
+  <p class="summary">A technical deep-dive that doesn't talk down to you. Exactly the kind of thing HN does best.</p>
+  <div class="meta">
+    <span>https:</span>
+    <span>691 pts</span>
+    <span>273 comments</span>
+  </div>
+  <a href="https://hex.ooo/library/last_question.html">Open →</a>
+</section>
+
+<section class="spread magazine-opener">
+  <div class="issue-num">No. 8</div>
+  <h1>Ban the sale of precise geolocation</h1>
+  <p class="summary">A technical deep-dive that doesn't talk down to you. Exactly the kind of thing HN does best.</p>
+  <div class="meta">
+    <span class="domain">https:</span>
+    <span class="score">673 pts</span>
+    <span class="comments">172 comments</span>
+  </div>
+  <a href="https://www.lawfaremedia.org/article/it-is-time-to-ban-the-sale-of-precise-geolocation" class="cta">Read the story</a>
+</section>
+
+<section class="spread noir">
+  <div class="numeral">9</div>
+  <div class="content">
+    <h1>Are the costs of AI agents also rising exponentially? (2025)</h1>
+    <span class="domain">https:</span>
+    <p class="summary">Another AI paper that will quietly change how products are built.</p>
+    <div class="meta">
+      <span>171 pts</span>
+      <span>41 comments</span>
+    </div>
+    <a href="https://www.tobyord.com/writing/hourly-costs-for-ai-agents">Read →</a>
+  </div>
+</section>
+
+<section class="spread index-card">
+  <div class="card-num">10</div>
+  <h1>A simplified model of Fil-C</h1>
+  <p class="summary">The model itself isn't the story — the data and infrastructure underneath it are.</p>
+  <div class="meta">
+    <span class="domain">https:</span>
+    <span class="score">153 pts</span>
+    <span class="comments">76 comments</span>
+    <a href="https://www.corsix.org/content/simplified-model-of-fil-c">→</a>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <span>Morning Edition &mdash; Curated daily from Hacker News</span>
+  <a href="https://news.ycombinator.com">Original →</a>
+</footer>
+
+</body>
+</html>
