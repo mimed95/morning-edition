@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Morning Edition — Daily Hacker News Magazine</title>
+  <title>Morning Edition — Hacker News, Tech & Vita Homebrew</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&display=swap');
 
@@ -18,19 +18,20 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      padding: 60px 20px;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 800px;
       text-align: center;
     }
 
+    /* ── Masthead ── */
     .eyebrow {
       font-size: 11px;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: #C9A84C;
+      color: #888;
       margin-bottom: 24px;
     }
 
@@ -40,7 +41,7 @@
       font-weight: 900;
       line-height: 0.95;
       color: white;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     h1 em {
@@ -50,35 +51,96 @@
 
     .tagline {
       font-size: 16px;
-      color: #666;
+      color: #555;
       line-height: 1.6;
-      margin: 32px 0;
+      margin: 32px 0 56px;
     }
 
-    .latest-label {
-      font-size: 11px;
-      letter-spacing: 0.2em;
+    /* ── Three magazines ── */
+    .magazines {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+      margin-bottom: 64px;
+    }
+
+    .mag-card {
+      background: #111;
+      padding: 32px 24px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mag-card .card-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: #444;
-      margin-bottom: 16px;
+      color: #555;
     }
 
-    .latest-btn {
+    .mag-card h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.1;
+    }
+
+    .mag-card h2 em {
+      font-style: italic;
+    }
+
+    .mag-card .card-desc {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .mag-card .latest-btn {
       display: inline-block;
-      background: #C9A84C;
-      color: #0D0D0D;
-      padding: 16px 40px;
-      font-size: 14px;
+      padding: 10px 20px;
+      font-size: 13px;
       font-weight: 600;
       text-decoration: none;
       letter-spacing: 0.05em;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
+      margin-top: 8px;
     }
 
-    .latest-btn:hover { background: white; }
+    /* HN — gold */
+    .mag-card.hacker .card-eyebrow { color: #C9A84C; }
+    .mag-card.hacker h2 em { color: #C9A84C; }
+    .mag-card.hacker .latest-btn {
+      background: #C9A84C;
+      color: #0D0D0D;
+    }
+    .mag-card.hacker .latest-btn:hover { background: white; }
 
+    /* Tech — emerald */
+    .mag-card.tech .card-eyebrow { color: #34d399; }
+    .mag-card.tech h2 em { color: #34d399; }
+    .mag-card.tech .latest-btn {
+      background: #34d399;
+      color: #0D0D0D;
+    }
+    .mag-card.tech .latest-btn:hover { background: white; }
+
+    /* Vita — violet */
+    .mag-card.vita .card-eyebrow { color: #a855f7; }
+    .mag-card.vita h2 em { color: #a855f7; }
+    .mag-card.vita .latest-btn {
+      background: #a855f7;
+      color: white;
+    }
+    .mag-card.vita .latest-btn:hover { background: white; color: #2A0040; }
+
+    /* ── Past editions ── */
     .past {
-      margin-top: 64px;
+      margin-top: 48px;
+      width: 100%;
     }
 
     .past h2 {
@@ -86,21 +148,38 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: #444;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
+
+    .past-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      text-align: left;
+    }
+
+    .past-col h3 {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .past-col.hacker h3 { color: #C9A84C; }
+    .past-col.tech h3 { color: #34d399; }
+    .past-col.vita h3 { color: #a855f7; }
 
     .past-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      text-align: left;
+      gap: 4px;
     }
 
     .past-list a {
-      color: #666;
+      color: #444;
       text-decoration: none;
-      font-size: 14px;
-      padding: 8px 0;
+      font-size: 13px;
+      padding: 5px 0;
       border-bottom: 1px solid #1a1a1a;
       display: flex;
       justify-content: space-between;
@@ -108,71 +187,169 @@
     }
 
     .past-list a:hover { color: white; }
-    .past-list a span { color: #C9A84C; }
+    .past-list a span { color: #666; font-size: 11px; }
 
+    /* ── Footer ── */
     .footer {
       margin-top: 80px;
       font-size: 12px;
       color: #333;
     }
-
-    .footer a { color: #555; text-decoration: none; }
+    .footer a { color: #444; text-decoration: none; }
     .footer a:hover { color: white; }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="eyebrow">Daily — Hacker News</div>
+    <div class="eyebrow">Three magazines, curated daily</div>
     <h1>Morning<br><em>Edition</em></h1>
     <p class="tagline">
-      Ten stories, curated for curious minds.<br>
+      Hacker News, Linux & hardware tech, and PS Vita homebrew.<br>
       No noise. No politics. Just good stuff.
     </p>
 
-    <div class="latest-label">Today's Edition</div>
-    <a href="/magazines/2026-04-15.html" class="latest-btn">Read the April 15 Edition →</a>
+    <!-- Three magazine cards -->
+    <div class="magazines">
+      <!-- Hacker News -->
+      <div class="mag-card hacker">
+        <div class="card-eyebrow">Daily — Hacker News</div>
+        <h2>Hacker<br><em>News</em></h2>
+        <p class="card-desc">Ten stories from the HN front page, curated for curious minds.</p>
+        <a href="#" id="hn-latest" class="latest-btn">Loading...</a>
+      </div>
 
+      <!-- Tech -->
+      <div class="mag-card tech">
+        <div class="card-eyebrow">Daily — Phoronix + Computerbase</div>
+        <h2>Linux &<br><em>Tech</em></h2>
+        <p class="card-desc">Hardware, kernel, open source and benchmarking. Linux-focused.</p>
+        <a href="#" id="tech-latest" class="latest-btn">Loading...</a>
+      </div>
+
+      <!-- Vita Homebrew -->
+      <div class="mag-card vita">
+        <div class="card-eyebrow">Monthly — wololo.net</div>
+        <h2>PS Vita<br><em>Homebrew</em></h2>
+        <p class="card-desc">The latest from the Vita homebrew and custom firmware scene.</p>
+        <a href="#" id="vita-latest" class="latest-btn">Loading...</a>
+      </div>
+    </div>
+
+    <!-- Past editions -->
     <div class="past">
       <h2>Past Editions</h2>
-      <div class="past-list" id="past-list">
-        <a href="/magazines/2026-04-15.html">April 15, 2026 <span>→</span></a>
+      <div class="past-grid">
+        <div class="past-col hacker">
+          <h3>Hacker News</h3>
+          <div class="past-list" id="hn-past"></div>
+        </div>
+        <div class="past-col tech">
+          <h3>Linux & Tech</h3>
+          <div class="past-list" id="tech-past"></div>
+        </div>
+        <div class="past-col vita">
+          <h3>PS Vita Homebrew</h3>
+          <div class="past-list" id="vita-past"></div>
+        </div>
       </div>
     </div>
 
     <div class="footer">
-      Published daily via <a href="https://github.com/mimed95/morning-edition">mimed95/morning-edition</a>
+      Published via <a href="https://github.com/mimed95/morning-edition">mimed95/morning-edition</a>
     </div>
   </div>
 
   <script>
     const today = new Date().toISOString().split('T')[0];
     const todayLabel = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    const latestBtn = document.querySelector('.latest-btn');
-    latestBtn.href = '/magazines/' + today + '.html';
-    latestBtn.textContent = 'Read the ' + todayLabel + ' Edition →';
 
-    // List magazines directory and populate past editions
+    const HN_LATEST = document.getElementById('hn-latest');
+    const TECH_LATEST = document.getElementById('tech-latest');
+    const VITA_LATEST = document.getElementById('vita-latest');
+
+    const HN_PAST = document.getElementById('hn-past');
+    const TECH_PAST = document.getElementById('tech-past');
+    const VITA_PAST = document.getElementById('vita-past');
+
+    function formatDate(dateStr) {
+      // dateStr is YYYY-MM, YYYY-MM-DD, or YYYY-MM-vita
+      const parts = dateStr.split('-');
+      const d = new Date(dateStr.includes('-vita')
+        ? parts[0] + '-' + parts[1] + '-01T00:00:00'
+        : dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function appendPast(listEl, name, label) {
+      const a = document.createElement('a');
+      a.href = '/magazines/' + name;
+      const span = document.createElement('span');
+      span.textContent = '→';
+      a.appendChild(document.createTextNode(label));
+      a.appendChild(span);
+      listEl.appendChild(a);
+    }
+
     fetch('https://api.github.com/repos/mimed95/morning-edition/contents/magazines')
       .then(r => r.json())
       .then(files => {
-        const list = document.getElementById('past-list');
-        list.innerHTML = ''; // clear placeholder
-        files
-          .filter(f => f.name.endsWith('.html'))
-          .sort()
-          .reverse()
-          .filter(f => f.name !== today + '.html')
-          .forEach(f => {
-            const date = f.name.replace('.html', '');
-            const d = new Date(date + 'T00:00:00');
-            const label = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-            const a = document.createElement('a');
-            a.href = '/magazines/' + f.name;
-            a.innerHTML = label + ' <span>→</span>';
-            list.appendChild(a);
-          });
+        const all = files.filter(f => f.name.endsWith('.html')).sort().reverse();
+
+        const hnFiles = all.filter(f => !f.name.includes('-tech') && !f.name.includes('-vita'));
+        const techFiles = all.filter(f => f.name.includes('-tech'));
+        const vitaFiles = all.filter(f => f.name.includes('-vita'));
+
+        // Latest buttons
+        if (hnFiles.length) {
+          const latest = hnFiles[0].name.replace('.html', '');
+          HN_LATEST.href = '/magazines/' + hnFiles[0].name;
+          HN_LATEST.textContent = latest === today
+            ? todayLabel
+            : formatDate(latest);
+        } else {
+          HN_LATEST.textContent = 'No editions yet';
+        }
+
+        if (techFiles.length) {
+          const latest = techFiles[0].name.replace('-tech.html', '');
+          TECH_LATEST.href = '/magazines/' + techFiles[0].name;
+          TECH_LATEST.textContent = latest === today
+            ? todayLabel
+            : formatDate(latest);
+        } else {
+          TECH_LATEST.textContent = 'No editions yet';
+        }
+
+        if (vitaFiles.length) {
+          const latest = vitaFiles[0].name.replace('-vita.html', '');
+          VITA_LATEST.href = '/magazines/' + vitaFiles[0].name;
+          // Monthly: show YYYY-MM label
+          const parts = latest.split('-');
+          const d = new Date(parts[0], parseInt(parts[1]) - 1, 1);
+          VITA_LATEST.textContent = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        } else {
+          VITA_LATEST.textContent = 'No editions yet';
+        }
+
+        // Past lists (skip today's HN edition)
+        hnFiles.slice(1).forEach(f => {
+          const label = formatDate(f.name.replace('.html', ''));
+          appendPast(HN_PAST, f.name, label);
+        });
+        techFiles.slice(1).forEach(f => {
+          const label = formatDate(f.name.replace('-tech.html', '')) + ' · Tech';
+          appendPast(TECH_PAST, f.name, label);
+        });
+        vitaFiles.slice(1).forEach(f => {
+          const label = formatDate(f.name) + ' · Vita';
+          appendPast(VITA_PAST, f.name, label);
+        });
       })
-      .catch(() => {});
+      .catch(() => {
+        HN_LATEST.textContent = 'Error loading';
+        TECH_LATEST.textContent = 'Error loading';
+        VITA_LATEST.textContent = 'Error loading';
+      });
   </script>
 </body>
 </html>
