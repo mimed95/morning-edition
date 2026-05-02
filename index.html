@@ -145,19 +145,26 @@
   </div>
 
   <script>
+    const today = new Date().toISOString().split('T')[0];
+    const todayLabel = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const latestBtn = document.querySelector('.latest-btn');
+    latestBtn.href = '/magazines/' + today + '.html';
+    latestBtn.textContent = 'Read the ' + todayLabel + ' Edition →';
+
     // List magazines directory and populate past editions
     fetch('https://api.github.com/repos/mimed95/morning-edition/contents/magazines')
       .then(r => r.json())
       .then(files => {
         const list = document.getElementById('past-list');
+        list.innerHTML = ''; // clear placeholder
         files
           .filter(f => f.name.endsWith('.html'))
           .sort()
           .reverse()
-          .slice(1) // skip today
+          .filter(f => f.name !== today + '.html')
           .forEach(f => {
             const date = f.name.replace('.html', '');
-            const d = new Date(date);
+            const d = new Date(date + 'T00:00:00');
             const label = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             const a = document.createElement('a');
             a.href = '/magazines/' + f.name;
