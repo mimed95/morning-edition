@@ -282,7 +282,7 @@
 
     function appendPast(listEl, name, label) {
       const a = document.createElement('a');
-      a.href = '/magazines/' + name;
+      a.href = './magazines/' + name;
       const span = document.createElement('span');
       span.textContent = '→';
       a.appendChild(document.createTextNode(label));
@@ -302,7 +302,7 @@
         // Latest buttons
         if (hnFiles.length) {
           const latest = hnFiles[0].name.replace('.html', '');
-          HN_LATEST.href = '/magazines/' + hnFiles[0].name;
+          HN_LATEST.href = './magazines/' + hnFiles[0].name;
           HN_LATEST.textContent = latest === today
             ? todayLabel
             : formatDate(latest);
@@ -312,7 +312,7 @@
 
         if (techFiles.length) {
           const latest = techFiles[0].name.replace('-tech.html', '');
-          TECH_LATEST.href = '/magazines/' + techFiles[0].name;
+          TECH_LATEST.href = './magazines/' + techFiles[0].name;
           TECH_LATEST.textContent = latest === today
             ? todayLabel
             : formatDate(latest);
@@ -322,7 +322,7 @@
 
         if (vitaFiles.length) {
           const latest = vitaFiles[0].name.replace('-vita.html', '');
-          VITA_LATEST.href = '/magazines/' + vitaFiles[0].name;
+          VITA_LATEST.href = './magazines/' + vitaFiles[0].name;
           // Monthly: show YYYY-MM label
           const parts = latest.split('-');
           const d = new Date(parts[0], parseInt(parts[1]) - 1, 1);
