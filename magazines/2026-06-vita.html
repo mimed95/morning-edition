@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PS Vita Homebrew — June 2026</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #FAF7F2;
+  --dark: #0D0D0D;
+  --midnight: #0A0F1E;
+  --rose: #F4E4E4;
+  --slate: #2A2D3A;
+  --terminal: #00FF88;
+  --gold: #C9A84C;
+  --charcoal: #1A1A1A;
+  --offwhite: #F5F5F0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--cream);
+  color: #1A1A1A;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+h1, h2, .display { font-family: 'Fraunces', Georgia, serif; }
+
+.masthead {
+  background: #2A0040;
+  color: white;
+  padding: 80px 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.masthead .edition {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  margin-bottom: 12px;
+}
+.masthead h1 {
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 900;
+  color: white;
+  line-height: 0.95;
+}
+.masthead h1 em {
+  color: #a855f7;
+  font-style: italic;
+}
+.masthead .tagline {
+  font-size: 16px;
+  color: #c4a0e8;
+  max-width: 300px;
+  text-align: right;
+  line-height: 1.5;
+}
+
+.stories { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+
+.spread.hero {
+  background: var(--dark);
+  color: white;
+  padding: 100px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+  min-height: 600px;
+}
+.spread.hero .numeral {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(120px, 18vw, 240px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.08);
+  line-height: 1;
+  user-select: none;
+}
+.spread.hero .domain {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  display: block;
+  margin-bottom: 16px;
+}
+.spread.hero h1 {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  color: white;
+}
+.spread.hero .summary {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.spread.hero .read-link {
+  display: inline-block;
+  background: #a855f7;
+  color: white;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.spread.hero .read-link:hover { background: white; color: #2A0040; }
+
+.spread.editorial {
+  background: var(--cream);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 24px;
+  min-height: 600px;
+  justify-content: start;
+}
+.spread.editorial .eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+}
+.spread.editorial .eyebrow .num {
+  font-family: 'Fraunces', serif;
+  font-size: 48px;
+  color: #a855f7;
+  font-style: italic;
+  margin-right: 8px;
+}
+.spread.editorial h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 700;
+  line-height: 1.1;
+  max-width: 700px;
+  color: #1A1A1A;
+}
+.spread.editorial blockquote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(20px, 3vw, 32px);
+  font-style: italic;
+  line-height: 1.5;
+  color: #555;
+  border-left: 4px solid #a855f7;
+  padding-left: 24px;
+  max-width: 600px;
+}
+.spread.editorial .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+  color: #888;
+}
+.spread.editorial .meta a {
+  color: #a855f7;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.spread.midnight {
+  background: var(--midnight);
+  color: var(--terminal);
+  padding: 80px 60px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.spread.midnight .terminal-header {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 24px;
+}
+.spread.midnight .prompt { color: var(--terminal); margin-right: 8px; }
+.spread.midnight h1 {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  color: white;
+  margin-bottom: 24px;
+  font-family: 'Courier New', monospace;
+}
+.spread.midnight .summary {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.spread.midnight .cmd {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--terminal);
+  text-decoration: none;
+  border: 1px solid var(--terminal);
+  padding: 8px 16px;
+  display: inline-block;
+}
+.spread.midnight .cmd:hover { background: var(--terminal); color: var(--midnight); }
+
+.spread.rose {
+  background: var(--rose);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+  min-height: 500px;
+}
+.spread.rose .stamp {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(80px, 12vw, 160px);
+  font-weight: 900;
+  color: rgba(168,85,247,0.15);
+  line-height: 1;
+}
+.spread.rose .tag {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  display: block;
+  margin-bottom: 16px;
+}
+.spread.rose h1 {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  color: #1A1A1A;
+  margin-bottom: 24px;
+}
+.spread.rose .summary {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 32px;
+}
+.spread.rose a {
+  color: #a855f7;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.spread.academic {
+  background: var(--offwhite);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  min-height: 500px;
+}
+.spread.academic .footnote {
+  font-family: 'Georgia', serif;
+  font-size: 48px;
+  color: #a855f7;
+  margin-bottom: 24px;
+}
+.spread.academic h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #1A1A1A;
+}
+.spread.academic .source {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+  display: block;
+  margin-bottom: 24px;
+}
+.spread.academic .body {
+  font-size: 17px;
+  color: #444;
+  line-height: 1.7;
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+.spread.academic .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+}
+.spread.academic .meta a {
+  color: #a855f7;
+  text-decoration: none;
+}
+
+.spread.brutalist {
+  background: #0D0D0D;
+  color: white;
+  padding: 80px 60px;
+  min-height: 500px;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 24px;
+}
+.spread.brutalist .num {
+  font-family: 'Arial Black', sans-serif;
+  font-size: clamp(80px, 15vw, 200px);
+  font-weight: 900;
+  color: #a855f7;
+  line-height: 0.9;
+}
+.spread.brutalist h1 {
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: white;
+  letter-spacing: -0.02em;
+}
+.spread.brutalist .summary {
+  font-size: 16px;
+  color: #888;
+  max-width: 600px;
+}
+.spread.brutalist .link {
+  display: inline-block;
+  background: #a855f7;
+  color: white;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.spread.bigstat {
+  background: var(--cream);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: center;
+  min-height: 500px;
+}
+.spread.bigstat .giant-num {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(100px, 18vw, 220px);
+  font-weight: 900;
+  color: rgba(168,85,247,0.12);
+  line-height: 1;
+}
+.spread.bigstat .divider {
+  width: 60px;
+  height: 3px;
+  background: #a855f7;
+  margin-bottom: 24px;
+}
+.spread.bigstat h1 {
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+.spread.bigstat .summary {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+}
+.spread.bigstat a {
+  color: #a855f7;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.spread.magazine-opener {
+  background: linear-gradient(135deg, #2A0040 0%, #0D0D0D 100%);
+  color: white;
+  padding: 100px 60px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.spread.magazine-opener .issue-num {
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: #a855f7;
+  margin-bottom: 24px;
+}
+.spread.magazine-opener h1 {
+  font-size: clamp(36px, 6vw, 80px);
+  font-weight: 900;
+  color: white;
+  margin-bottom: 24px;
+  line-height: 1.05;
+}
+.spread.magazine-opener .summary {
+  font-size: 18px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.spread.magazine-opener .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 32px;
+}
+.spread.magazine-opener .domain { color: #a855f7; text-transform: uppercase; letter-spacing: 0.1em; }
+.spread.magazine-opener .cta {
+  display: inline-block;
+  background: #a855f7;
+  color: white;
+  padding: 16px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.spread.magazine-opener .cta:hover { background: white; color: #2A0040; }
+
+.spread.noir {
+  background: var(--charcoal);
+  color: white;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+  min-height: 500px;
+}
+.spread.noir .numeral {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(80px, 12vw, 160px);
+  font-weight: 900;
+  color: rgba(168,85,247,0.2);
+  line-height: 1;
+}
+.spread.noir h1 {
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.spread.noir .domain {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  display: block;
+  margin-bottom: 16px;
+}
+.spread.noir .summary {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 32px;
+}
+.spread.noir a {
+  color: #a855f7;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.spread.index-card {
+  background: white;
+  color: #1A1A1A;
+  padding: 60px;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 16px;
+  min-height: 400px;
+}
+.spread.index-card .card-num {
+  font-family: 'Fraunces', serif;
+  font-size: 64px;
+  font-weight: 900;
+  color: #a855f7;
+  line-height: 1;
+}
+.spread.index-card h1 {
+  font-size: clamp(20px, 3vw, 36px);
+  font-weight: 700;
+  color: #1A1A1A;
+}
+.spread.index-card .summary {
+  font-size: 15px;
+  color: #666;
+}
+.spread.index-card .meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #888;
+  margin-top: auto;
+}
+.spread.index-card .domain { color: #a855f7; text-transform: uppercase; letter-spacing: 0.1em; }
+.spread.index-card a { color: #a855f7; text-decoration: none; }
+
+.footer {
+  background: #0D0D0D;
+  color: #444;
+  text-align: center;
+  padding: 40px;
+  font-size: 13px;
+}
+.footer a { color: #666; text-decoration: none; }
+.footer a:hover { color: white; }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div>
+      <div class="edition">Monthly Digest — Vita Homebrew Sources</div>
+      <h1>PS Vita<br><em>Homebrew</em></h1>
+    </div>
+    <p class="tagline">11 stories from the Vita homebrew scene. June 2026.</p>
+  </header>
+
+  <div class="stories">
+    <section class="spread hero">
+  <div class="numeral">1</div>
+  <div class="content">
+    <span class="domain">wololo.net</span>
+    <h1>Bi-Weekly Questions Thread (new edition)</h1>
+    <p class="summary">Welcome to the r/vitahacks Bi-Weekly Question thread! Please post all questions here. </stro</p>
+    <a href="https://www.reddit.com/r/vitahacks/comments/1tpptsy/biweekly_questions_thread_new_edition/" class="read-link">Read more →</a>
+  </div>
+</section>
+
+<section class="spread editorial">
+  <div class="eyebrow"><span class="num">2</span> — wololo.net</div>
+  <h1>New Chicken Gun PSVITA Port Update! (Version 2.0.9)</h1>
+  <blockquote><img src="https://preview.redd.it/35axvz6p4p4h1.png?width=140&height</blockquote>
+  <div class="meta">
+    <a href="https://www.reddit.com/r/vitahacks/comments/1ttx4om/new_chicken_gun_psvita_port_update_version_209/">Read →</a>
+  </div>
+</section>
+
+<section class="spread midnight">
+  <div class="terminal-header">
+    <span class="prompt">$</span> wololo.net
+  </div>
+  <h1 class="title">Aleph One (Marathon Trilogy) Progress Showcase</h1>
+  <p class="summary">&#32; submitted by &#32; /u/RelativeCycle5287 <a href="/r/u_RelativeCycle5287/comments/1ttpcsx/aleph_one_marathon_trilogy_prog</p>
+  <a href="https://www.reddit.com/r/vitahacks/comments/1ttpg67/aleph_one_marathon_trilogy_progress_showcase/" class="cmd">curl https://www.reddit.com/r/vitahacks/comments/1ttpg67/aleph_one_marathon_trilogy_progress_showcase/</a>
+</section>
+
+<section class="spread rose">
+  <div class="stamp">4</div>
+  <div class="content">
+    <span class="tag">wololo.net</span>
+    <h1>removed my left joystick and I still have very bad stickdrift</h1>
+    <p class="summary">&#32; submitted by &#32; /u/nickprofn [link]<</p>
+    <a href="https://www.reddit.com/r/vitahacks/comments/1ttki7d/removed_my_left_joystick_and_i_still_have_very/">Read more →</a>
+  </div>
+</section>
+
+<section class="spread academic">
+  <div class="footnote">[5]</div>
+  <div class="content">
+    <h1>Aleph One (Marathon Trilogy) PsVita First Playable Version</h1>
+    <span class="source">wololo.net</span>
+    <p class="body"><img src="https://preview.redd.it/42xsqr0oph4h1.png?width=140&heig</p>
+    <div class="meta">
+      <a href="https://www.reddit.com/r/vitahacks/comments/1tsy8wk/aleph_one_marathon_trilogy_psvita_first_playable/">Source →</a>
+    </div>
+  </div>
+</section>
+
+<section class="spread brutalist">
+  <div class="num">6</div>
+  <h1>Black screen after installing TV output plugin on Ensō modded Vita 2000 — L button skip not working</h1>
+  <p class="summary">My PS Vita 2000 has Ensō (I think) installed. Someone else set it up and installed a TV output plugin. Now the screen is completely black but it boots fine — music pl</p>
+  <a href="https://www.reddit.com/r/vitahacks/comments/1ttgyr2/black_screen_after_installing_tv_output_plugin_on/" class="link">READ MORE</a>
+</section>
+
+<section class="spread bigstat">
+  <div class="giant-num">7</div>
+  <div class="divider"></div>
+  <h1>Godot Vita Development</h1>
+  <p class="summary">Ever since playing ABYSS from VitaDB, I've reclaimed a great interest in developing a game on the Vita. I currently use Godot 4.6 for my own projects, and saw tha</p>
+  <a href="https://www.reddit.com/r/vitahacks/comments/1tsosca/godot_vita_development/">Open →</a>
+</section>
+
+<section class="spread magazine-opener">
+  <div class="issue-num">No. 8</div>
+  <h1>Chicken Gun PSVITA Port Update! (Version 2.0.8)</h1>
+  <p class="summary"><img src="https://preview.redd.it/645bfmb2oa4h1.png?width=140&height=79&</p>
+  <div class="meta">
+    <span class="domain">wololo.net</span>
+  </div>
+  <a href="https://www.reddit.com/r/vitahacks/comments/1ts38u9/chicken_gun_psvita_port_update_version_208/" class="cta">Read the story</a>
+</section>
+
+<section class="spread noir">
+  <div class="numeral">9</div>
+  <div class="content">
+    <h1>Any scanlines plugin for Vita?</h1>
+    <span class="domain">wololo.net</span>
+    <p class="summary">I've done some research and my only luck was shaders for RetroArch. But is there any way to apply them no matter the game? Specifically, I'd like to ad</p>
+    <a href="https://www.reddit.com/r/vitahacks/comments/1tsymhy/any_scanlines_plugin_for_vita/">Read →</a>
+  </div>
+</section>
+
+<section class="spread index-card">
+  <div class="card-num">10</div>
+  <h1>Recently got this modded 1100 & when i first got it Adrenaline worked but now its corrupt & mGBA worked but now its corrupt any suggestions</h1>
+  <p class="summary"><img src="https://preview.redd.it/1u9fp52z3e4h1.jpg?width=140&hei</p>
+  <div class="meta">
+    <span class="domain">wololo.net</span>
+    <a href="https://www.reddit.com/r/vitahacks/comments/1tsjky5/recently_got_this_modded_1100_when_i_first_got_it/">→</a>
+  </div>
+</section>
+
+<section class="spread hero">
+  <div class="numeral">11</div>
+  <div class="content">
+    <span class="domain">wololo.net</span>
+    <h1>Homebrew Release: Warnel Chawpiovs v1.3.0 (PC & Nintendo Switch), adds “The Galaxy’s Most Wanted” cards and more</h1>
+    <p class="summary">I’ve just released version 1.3.0 of “Warnel Chawpiovs”, a homebrew game for PC (Windows, Linux, MacOS versions are now available) and Nintendo Switch. I’m particularly excited because this release add</p>
+    <a href="https://wololo.net/2026/05/15/homebrew-release-warnel-chawpiovs-v1-3-0-pc-nintendo-switch-adds-the-galaxys-most-wanted-cards-and-more/" class="read-link">Read more →</a>
+  </div>
+</section>
+  </div>
+
+  <footer class="footer">
+    <a href="https://github.com/mimed95/morning-edition">mimed95/morning-edition</a>
+  </footer>
+</body>
+</html>
