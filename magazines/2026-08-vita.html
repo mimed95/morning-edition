@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PS Vita Homebrew — August 2026</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #FAF7F2;
+  --dark: #0D0D0D;
+  --midnight: #0A0F1E;
+  --rose: #F4E4E4;
+  --slate: #2A2D3A;
+  --terminal: #00FF88;
+  --gold: #C9A84C;
+  --charcoal: #1A1A1A;
+  --offwhite: #F5F5F0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--cream);
+  color: #1A1A1A;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+h1, h2, .display { font-family: 'Fraunces', Georgia, serif; }
+
+.masthead {
+  background: #2A0040;
+  color: white;
+  padding: 80px 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.masthead .edition {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  margin-bottom: 12px;
+}
+.masthead h1 {
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 900;
+  color: white;
+  line-height: 0.95;
+}
+.masthead h1 em {
+  color: #a855f7;
+  font-style: italic;
+}
+.masthead .tagline {
+  font-size: 16px;
+  color: #c4a0e8;
+  max-width: 300px;
+  text-align: right;
+  line-height: 1.5;
+}
+
+.stories { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+
+.spread.hero {
+  background: var(--dark);
+  color: white;
+  padding: 100px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+  min-height: 600px;
+}
+.spread.hero .numeral {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(120px, 18vw, 240px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.08);
+  line-height: 1;
+  user-select: none;
+}
+.spread.hero .domain {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  display: block;
+  margin-bottom: 16px;
+}
+.spread.hero h1 {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  color: white;
+}
+.spread.hero .summary {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.spread.hero .read-link {
+  display: inline-block;
+  background: #a855f7;
+  color: white;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.spread.hero .read-link:hover { background: white; color: #2A0040; }
+
+.spread.editorial {
+  background: var(--cream);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 24px;
+  min-height: 600px;
+  justify-content: start;
+}
+.spread.editorial .eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+}
+.spread.editorial .eyebrow .num {
+  font-family: 'Fraunces', serif;
+  font-size: 48px;
+  color: #a855f7;
+  font-style: italic;
+  margin-right: 8px;
+}
+.spread.editorial h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 700;
+  line-height: 1.1;
+  max-width: 700px;
+  color: #1A1A1A;
+}
+.spread.editorial blockquote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(20px, 3vw, 32px);
+  font-style: italic;
+  line-height: 1.5;
+  color: #555;
+  border-left: 4px solid #a855f7;
+  padding-left: 24px;
+  max-width: 600px;
+}
+.spread.editorial .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+  color: #888;
+}
+.spread.editorial .meta a {
+  color: #a855f7;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.spread.midnight {
+  background: var(--midnight);
+  color: var(--terminal);
+  padding: 80px 60px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.spread.midnight .terminal-header {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 24px;
+}
+.spread.midnight .prompt { color: var(--terminal); margin-right: 8px; }
+.spread.midnight h1 {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  color: white;
+  margin-bottom: 24px;
+  font-family: 'Courier New', monospace;
+}
+.spread.midnight .summary {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.spread.midnight .cmd {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--terminal);
+  text-decoration: none;
+  border: 1px solid var(--terminal);
+  padding: 8px 16px;
+  display: inline-block;
+}
+.spread.midnight .cmd:hover { background: var(--terminal); color: var(--midnight); }
+
+.spread.rose {
+  background: var(--rose);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+  min-height: 500px;
+}
+.spread.rose .stamp {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(80px, 12vw, 160px);
+  font-weight: 900;
+  color: rgba(168,85,247,0.15);
+  line-height: 1;
+}
+.spread.rose .tag {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  display: block;
+  margin-bottom: 16px;
+}
+.spread.rose h1 {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  color: #1A1A1A;
+  margin-bottom: 24px;
+}
+.spread.rose .summary {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 32px;
+}
+.spread.rose a {
+  color: #a855f7;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.spread.academic {
+  background: var(--offwhite);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  min-height: 500px;
+}
+.spread.academic .footnote {
+  font-family: 'Georgia', serif;
+  font-size: 48px;
+  color: #a855f7;
+  margin-bottom: 24px;
+}
+.spread.academic h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #1A1A1A;
+}
+.spread.academic .source {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+  display: block;
+  margin-bottom: 24px;
+}
+.spread.academic .body {
+  font-size: 17px;
+  color: #444;
+  line-height: 1.7;
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+.spread.academic .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+}
+.spread.academic .meta a {
+  color: #a855f7;
+  text-decoration: none;
+}
+
+.spread.brutalist {
+  background: #0D0D0D;
+  color: white;
+  padding: 80px 60px;
+  min-height: 500px;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 24px;
+}
+.spread.brutalist .num {
+  font-family: 'Arial Black', sans-serif;
+  font-size: clamp(80px, 15vw, 200px);
+  font-weight: 900;
+  color: #a855f7;
+  line-height: 0.9;
+}
+.spread.brutalist h1 {
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: white;
+  letter-spacing: -0.02em;
+}
+.spread.brutalist .summary {
+  font-size: 16px;
+  color: #888;
+  max-width: 600px;
+}
+.spread.brutalist .link {
+  display: inline-block;
+  background: #a855f7;
+  color: white;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.spread.bigstat {
+  background: var(--cream);
+  color: #1A1A1A;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: center;
+  min-height: 500px;
+}
+.spread.bigstat .giant-num {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(100px, 18vw, 220px);
+  font-weight: 900;
+  color: rgba(168,85,247,0.12);
+  line-height: 1;
+}
+.spread.bigstat .divider {
+  width: 60px;
+  height: 3px;
+  background: #a855f7;
+  margin-bottom: 24px;
+}
+.spread.bigstat h1 {
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+.spread.bigstat .summary {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+}
+.spread.bigstat a {
+  color: #a855f7;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.spread.magazine-opener {
+  background: linear-gradient(135deg, #2A0040 0%, #0D0D0D 100%);
+  color: white;
+  padding: 100px 60px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.spread.magazine-opener .issue-num {
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: #a855f7;
+  margin-bottom: 24px;
+}
+.spread.magazine-opener h1 {
+  font-size: clamp(36px, 6vw, 80px);
+  font-weight: 900;
+  color: white;
+  margin-bottom: 24px;
+  line-height: 1.05;
+}
+.spread.magazine-opener .summary {
+  font-size: 18px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.spread.magazine-opener .meta {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 32px;
+}
+.spread.magazine-opener .domain { color: #a855f7; text-transform: uppercase; letter-spacing: 0.1em; }
+.spread.magazine-opener .cta {
+  display: inline-block;
+  background: #a855f7;
+  color: white;
+  padding: 16px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.spread.magazine-opener .cta:hover { background: white; color: #2A0040; }
+
+.spread.noir {
+  background: var(--charcoal);
+  color: white;
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: start;
+  min-height: 500px;
+}
+.spread.noir .numeral {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(80px, 12vw, 160px);
+  font-weight: 900;
+  color: rgba(168,85,247,0.2);
+  line-height: 1;
+}
+.spread.noir h1 {
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.spread.noir .domain {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  display: block;
+  margin-bottom: 16px;
+}
+.spread.noir .summary {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 32px;
+}
+.spread.noir a {
+  color: #a855f7;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.spread.index-card {
+  background: white;
+  color: #1A1A1A;
+  padding: 60px;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 16px;
+  min-height: 400px;
+}
+.spread.index-card .card-num {
+  font-family: 'Fraunces', serif;
+  font-size: 64px;
+  font-weight: 900;
+  color: #a855f7;
+  line-height: 1;
+}
+.spread.index-card h1 {
+  font-size: clamp(20px, 3vw, 36px);
+  font-weight: 700;
+  color: #1A1A1A;
+}
+.spread.index-card .summary {
+  font-size: 15px;
+  color: #666;
+}
+.spread.index-card .meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #888;
+  margin-top: auto;
+}
+.spread.index-card .domain { color: #a855f7; text-transform: uppercase; letter-spacing: 0.1em; }
+.spread.index-card a { color: #a855f7; text-decoration: none; }
+
+.footer {
+  background: #0D0D0D;
+  color: #444;
+  text-align: center;
+  padding: 40px;
+  font-size: 13px;
+}
+.footer a { color: #666; text-decoration: none; }
+.footer a:hover { color: white; }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div>
+      <div class="edition">Monthly Digest — Vita Homebrew Sources</div>
+      <h1>PS Vita<br><em>Homebrew</em></h1>
+    </div>
+    <p class="tagline">11 stories from the Vita homebrew scene. August 2026.</p>
+  </header>
+
+  <div class="stories">
+    <section class="spread hero">
+  <div class="numeral">1</div>
+  <div class="content">
+    <span class="domain">wololo.net</span>
+    <h1>Megathread - Ports / games wishlist</h1>
+    <p class="summary">Hi all, Creating this so that there aren't multiple posts asking for ports / games / what have you. You're free to chat about them here though.<</p>
+    <a href="https://www.reddit.com/r/vitahacks/comments/1u817a4/megathread_ports_games_wishlist/" class="read-link">Read more →</a>
+  </div>
+</section>
+
+<section class="spread editorial">
+  <div class="eyebrow"><span class="num">2</span> — wololo.net</div>
+  <h1>Bi-Weekly Questions Thread (new edition)</h1>
+  <blockquote>Welcome to the r/vitahacks Bi-Weekly Question thread! Please post all questions here. </stro</blockquote>
+  <div class="meta">
+    <a href="https://www.reddit.com/r/vitahacks/comments/1v40arc/biweekly_questions_thread_new_edition/">Read →</a>
+  </div>
+</section>
+
+<section class="spread midnight">
+  <div class="terminal-header">
+    <span class="prompt">$</span> wololo.net
+  </div>
+  <h1 class="title">ELITE: VITA - an update and upcoming Beta announcement</h1>
+  <p class="summary"><img src="https://preview.redd.it/53hwwvrcvlgh1.jpg?width=140&height=78&</p>
+  <a href="https://www.reddit.com/r/vitahacks/comments/1vbyjy3/elite_vita_an_update_and_upcoming_beta/" class="cmd">curl https://www.reddit.com/r/vitahacks/comments/1vbyjy3/elite_vita_an_update_and_upcoming_beta/</a>
+</section>
+
+<section class="spread rose">
+  <div class="stamp">4</div>
+  <div class="content">
+    <span class="tag">wololo.net</span>
+    <h1>Welllllllp</h1>
+    <p class="summary"><img src="https://preview.redd.it/2ug3126w9fgh1.png?width=640&crop=smart&auto=webp&s=f10c6cc2c91</p>
+    <a href="https://www.reddit.com/r/vitahacks/comments/1vbb5zd/welllllllp/">Read more →</a>
+  </div>
+</section>
+
+<section class="spread academic">
+  <div class="footnote">[5]</div>
+  <div class="content">
+    <h1>Is so peak</h1>
+    <span class="source">wololo.net</span>
+    <p class="body"><img src="https://preview.redd.it/7b8o73z43fgh1.jpeg?width=640&crop=smart&auto=webp&s=0bdcad724b</p>
+    <div class="meta">
+      <a href="https://www.reddit.com/r/vitahacks/comments/1vb3bjm/is_so_peak/">Source →</a>
+    </div>
+  </div>
+</section>
+
+<section class="spread brutalist">
+  <div class="num">6</div>
+  <h1>Some PS Vita Games Crash with ioplus.skprx</h1>
+  <p class="summary"><img src="https://preview.redd.it/fpqqiwzknkgh1.jpg?width=140&height=140&</p>
+  <a href="https://www.reddit.com/r/vitahacks/comments/1vbrv08/some_ps_vita_games_crash_with_ioplusskprx/" class="link">READ MORE</a>
+</section>
+
+<section class="spread bigstat">
+  <div class="giant-num">7</div>
+  <div class="divider"></div>
+  <h1>Running ported games from VitaDB are all failing</h1>
+  <p class="summary">I had an old Vita in my desk and decided to put CFW on it for my tween kid to play around with (and me too, lol). Things have been going great, but this is my first c</p>
+  <a href="https://www.reddit.com/r/vitahacks/comments/1vbddel/running_ported_games_from_vitadb_are_all_failing/">Open →</a>
+</section>
+
+<section class="spread magazine-opener">
+  <div class="issue-num">No. 8</div>
+  <h1>Éclairez moi</h1>
+  <p class="summary">Bonjour tout le monde , jai acheté une ps vita récemment car quand j'étais petit j'ai jamais eu l'occasion d'avoir une psp et une vita alors je suis p</p>
+  <div class="meta">
+    <span class="domain">wololo.net</span>
+  </div>
+  <a href="https://www.reddit.com/r/vitahacks/comments/1vb14yw/éclairez_moi/" class="cta">Read the story</a>
+</section>
+
+<section class="spread noir">
+  <div class="numeral">9</div>
+  <div class="content">
+    <h1>Barony vita</h1>
+    <span class="domain">wololo.net</span>
+    <p class="summary">hello! new project I’ve been working on last few months. requires steam game files installed on your pc when building data files (it will check dlc too) curren</p>
+    <a href="https://www.reddit.com/r/vitahacks/comments/1v8zqrw/barony_vita/">Read →</a>
+  </div>
+</section>
+
+<section class="spread index-card">
+  <div class="card-num">10</div>
+  <h1>Call of duty black OPS zombies servidor online</h1>
+  <p class="summary"><img src="https://external-preview.redd.it/17x6fK-_gn2sLTjgFt0DXPBu6wUxy</p>
+  <div class="meta">
+    <span class="domain">wololo.net</span>
+    <a href="https://www.reddit.com/r/vitahacks/comments/1v9h7sa/call_of_duty_black_ops_zombies_servidor_online/">→</a>
+  </div>
+</section>
+
+<section class="spread hero">
+  <div class="numeral">11</div>
+  <div class="content">
+    <span class="domain">wololo.net</span>
+    <h1>Homebrew Release: Warnel Chawpiovs v1.5.0 (PC, Nintendo Switch, Android), adds 9 new heroes and significant performance improvements</h1>
+    <p class="summary">I’ve just released version 1.5.0 of “Warnel Chawpiovs”, a homebrew game for PC (Windows, Linux, MacOS versions are now available), Nintendo Switch, and Android. This new release fixes some significant</p>
+    <a href="https://wololo.net/2026/07/03/homebrew-release-warnel-chawpiovs-v1-5-0-pc-nintendo-switch-android-adds-9-new-heroes-and-significant-performance-improvements/" class="read-link">Read more →</a>
+  </div>
+</section>
+  </div>
+
+  <footer class="footer">
+    <a href="https://github.com/mimed95/morning-edition">mimed95/morning-edition</a>
+  </footer>
+</body>
+</html>
