@@ -12,6 +12,7 @@ import random
 import re
 import subprocess
 import urllib.request
+from urllib.parse import urlparse
 from typing import Optional
 
 # ─── Config ────────────────────────────────────────────────────────────────
@@ -195,7 +196,7 @@ LAYOUTS = [
     <p class="summary">{summary}</p>
     <div class="meta">
       <span class="score">{score} pts</span>
-      <span class="comments">{comments} comments</span>
+      <a href="{comments_url}" class="comments">{comments} comments</a>
     </div>
     <a href="{url}" class="read-link">Read the story →</a>
   </div>
@@ -208,7 +209,7 @@ LAYOUTS = [
   <blockquote>{summary}</blockquote>
   <div class="meta">
     <span class="score">{score} pts</span>
-    <span class="comments">{comments} comments</span>
+    <a href="{comments_url}" class="comments">{comments} comments</a>
     <a href="{url}">Read →</a>
   </div>
 </section>""",
@@ -222,7 +223,7 @@ LAYOUTS = [
   <p class="summary">{summary}</p>
   <div class="meta">
     <span class="score">&gt; {score} pts</span>
-    <span class="comments">// {comments} comments</span>
+    <a href="{comments_url}" class="comments">// {comments} comments</a>
   </div>
   <a href="{url}" class="cmd">curl {url}</a>
 </section>""",
@@ -234,7 +235,7 @@ LAYOUTS = [
     <span class="tag">{domain}</span>
     <h1>{title}</h1>
     <p class="summary">{summary}</p>
-    <a href="{url}">{score} pts — {comments} comments →</a>
+    <a href="{comments_url}">{score} pts — {comments} comments →</a>
   </div>
 </section>""",
 
@@ -247,7 +248,7 @@ LAYOUTS = [
     <p class="body">{summary}</p>
     <div class="meta">
       <span>{score} points</span>
-      <span>{comments} comments</span>
+      <a href="{comments_url}">{comments} comments</a>
       <a href="{url}">DOI link →</a>
     </div>
   </div>
@@ -260,7 +261,7 @@ LAYOUTS = [
   <div class="meta">
     <span>{domain}</span>
     <span>{score}pts</span>
-    <span>{comments}c</span>
+    <a href="{comments_url}">{comments}c</a>
   </div>
   <p class="summary">{summary}</p>
   <a href="{url}" class="link">READ MORE</a>
@@ -275,7 +276,7 @@ LAYOUTS = [
   <div class="meta">
     <span>{domain}</span>
     <span>{score} pts</span>
-    <span>{comments} comments</span>
+    <a href="{comments_url}">{comments} comments</a>
   </div>
   <a href="{url}">Open →</a>
 </section>""",
@@ -288,7 +289,7 @@ LAYOUTS = [
   <div class="meta">
     <span class="domain">{domain}</span>
     <span class="score">{score} pts</span>
-    <span class="comments">{comments} comments</span>
+    <a href="{comments_url}" class="comments">{comments} comments</a>
   </div>
   <a href="{url}" class="cta">Read the story</a>
 </section>""",
@@ -302,7 +303,7 @@ LAYOUTS = [
     <p class="summary">{summary}</p>
     <div class="meta">
       <span>{score} pts</span>
-      <span>{comments} comments</span>
+      <a href="{comments_url}">{comments} comments</a>
     </div>
     <a href="{url}">Read →</a>
   </div>
@@ -316,7 +317,7 @@ LAYOUTS = [
   <div class="meta">
     <span class="domain">{domain}</span>
     <span class="score">{score} pts</span>
-    <span class="comments">{comments} comments</span>
+    <a href="{comments_url}" class="comments">{comments} comments</a>
     <a href="{url}">→</a>
   </div>
 </section>""",
@@ -451,6 +452,14 @@ h1, h2, .display { font-family: 'Fraunces', Georgia, serif; }
   letter-spacing: 0.05em;
 }
 .spread.hero .read-link:hover { background: white; }
+
+/* ─── Comments link ─── */
+.meta .comments {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 500;
+}
+.meta .comments:hover { text-decoration: underline; }
 
 /* ─── SPREAD 2: EDITORIAL ─── */
 .spread.editorial {
@@ -957,8 +966,8 @@ h1, h2, .display { font-family: 'Fraunces', Georgia, serif; }
 def get_domain(url: str) -> str:
     if not url:
         return "news.ycombinator.com"
-    domain = re.sub(r"^https?://(www\.)?", "", url.split("/")[0] if "/" in url else url)
-    return domain.split("?")[0]
+    domain = urlparse(url).netloc.lower()
+    return re.sub(r"^www\.", "", domain)
 
 
 def build_magazine(stories: list[dict], date_str: str) -> str:
@@ -975,12 +984,14 @@ def build_magazine(stories: list[dict], date_str: str) -> str:
         domain = get_domain(story.get("url", ""))
         summary = make_summary(story)
 
+        comments_url = f"https://news.ycombinator.com/item?id={story.get('id')}"
         block = layout.format(
             num=num,
             title=title,
             url=url,
             score=score,
             comments=comments,
+            comments_url=comments_url,
             domain=domain,
             summary=summary,
         )

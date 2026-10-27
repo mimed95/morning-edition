@@ -7,11 +7,13 @@ Fetches posts from wololo.net (PS Vita homebrew hub) and outputs:
 Git push is done so the HTML shows up on GitHub Pages.
 """
 
+import html
 import os
 import re
 import subprocess
 import urllib.request
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 TELEGRAM_BOT_TOKEN=os.getenv("TELEGRAM_BOT_TOKEN", "")
@@ -24,6 +26,33 @@ GIT_EMAIL = os.getenv("GIT_AUTHOR_EMAIL", "agent@morning-edition")
 
 WOLOLO_RSS = "https://wololo.net/feed/"
 MAX_ARTICLES = 10
+
+# File storing URLs from the last edition — used to skip duplicates
+PUBLISHED_URLS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "magazines", ".published_urls.txt")
+
+
+def load_previously_published():
+    """Return a set of URLs published in the previous edition."""
+    if not os.path.exists(PUBLISHED_URLS_FILE):
+        return set()
+    with open(PUBLISHED_URLS_FILE, "r") as f:
+        return {line.strip() for line in f if line.strip()}
+
+
+def save_published_urls(urls):
+    """Save the URLs from this edition for use as the baseline next time."""
+    with open(PUBLISHED_URLS_FILE, "w") as f:
+        for url in sorted(urls):
+            f.write(url + "\n")
+
+# Curated Vita homebrew feeds (from vault: Retro Gaming/Vita Homebrew Feeds.md)
+# NOTE: Nitter feeds (nitter.net) are unreachable from server - skipped.
+# GitHub releases.atom URLs need per-repo names (not github.com/owner/releases.atom) - skipped.
+# Working feeds below.
+FEEDS = {
+    # Reddit
+    "vitahacks_reddit": {"url": "https://www.reddit.com/r/vitahacks/.rss", "type": "rss", "source": "Reddit", "handle": "r/vitahacks"},
+}
 
 
 def fetch(url):
@@ -39,8 +68,13 @@ def fetch(url):
 def parse_rss(xml_text):
     try:
         root = ET.fromstring(xml_text)
+        # Reddit .rss returns Atom with namespace; detect and handle both
+        channel = root.find("channel")
+        if channel is None:
+            # No <channel> = Atom format, delegate to parse_atom
+            return parse_atom(xml_text)
         items = []
-        for item in root.find("channel").findall("item")[:MAX_ARTICLES]:
+        for item in channel.findall("item")[:MAX_ARTICLES]:
             title = (item.findtext("title") or "").strip()
             link = (item.findtext("link") or "").strip()
             pub = (item.findtext("pubDate") or "").strip()
@@ -52,6 +86,69 @@ def parse_rss(xml_text):
     except Exception as e:
         print(f"[parse error] {e}", file=os.sys.stderr)
         return []
+
+
+ATOM_NS = "http://www.w3.org/2005/Atom"
+
+
+def parse_atom(xml_text):
+    """Parse Atom feed (used by Nitter and GitHub releases.atom)."""
+    try:
+        root = ET.fromstring(xml_text)
+        # Handle namespaced Atom (e.g. Reddit)
+        ns = root.tag.split("}")[0].lstrip("{") if root.tag.startswith("{") else ATOM_NS
+        ns_prefix = f"{{{ns}}}" if ns else ""
+        items = []
+        for entry in root.findall(f"{ns_prefix}entry")[:MAX_ARTICLES]:
+            title = (entry.findtext(f"{ns_prefix}title") or "").strip()
+            link_el = entry.find(f"{ns_prefix}link")
+            link = link_el.get("href") if link_el is not None else ""
+            pub = (entry.findtext(f"{ns_prefix}published") or entry.findtext(f"{ns_prefix}updated") or "").strip()
+            content_el = entry.find(f"{ns_prefix}content")
+            desc = content_el.text.strip() if content_el is not None and content_el.text else ""
+            if title:
+                items.append({"title": title, "link": link, "pubDate": pub, "description": desc[:200]})
+        return items
+    except Exception as e:
+        print(f"[atom parse error] {e}", file=os.sys.stderr)
+        return []
+
+
+def fetch_curated_feeds():
+    """Fetch all curated feeds in parallel and return a flat list of items with source metadata."""
+    all_items = []
+
+    def fetch_one(feed_key, meta):
+        url = meta["url"]
+        feed_type = meta.get("type", "rss")
+        source = meta.get("source", "Unknown")
+        handle = meta.get("handle", feed_key)
+        xml = fetch(url)
+        if not xml:
+            print(f"[skip] {feed_key} ({url}) - no content", file=os.sys.stderr)
+            return []
+        if feed_type == "atom":
+            items = parse_atom(xml)
+        else:
+            items = parse_rss(xml)
+        for item in items:
+            item["source"] = source
+            item["feed_key"] = feed_key
+            item["handle"] = handle
+        return items
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = {executor.submit(fetch_one, k, v): k for k, v in FEEDS.items()}
+        for future in as_completed(futures):
+            feed_key = futures[future]
+            try:
+                items = future.result()
+                print(f"[ok] {feed_key}: {len(items)} items", file=os.sys.stderr)
+                all_items.extend(items)
+            except Exception as e:
+                print(f"[error] {feed_key}: {e}", file=os.sys.stderr)
+
+    return all_items
 
 
 def send_telegram(message):
@@ -76,14 +173,21 @@ def git_commit_push(filename: str, month_str: str) -> bool:
         env = os.environ.copy()
         if GITHUB_TOKEN:
             env["GIT_TOKEN"] = GITHUB_TOKEN
-        subprocess.run(["git", "add", filename], cwd=GIT_REPO_DIR, check=True, env=env)
+        # Detect current branch
+        branch = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=GIT_REPO_DIR, check=True, capture_output=True, text=True
+        ).stdout.strip()
+        subprocess.run(
+            ["git", "add", filename], cwd=GIT_REPO_DIR, check=True, env=env
+        )
         subprocess.run(
             ["git", "-c", "user.name=" + GIT_USER, "-c", "user.email=" + GIT_EMAIL,
              "commit", "-m", f"PS Vita digest {month_str}"],
             cwd=GIT_REPO_DIR, check=True, env=env
         )
         subprocess.run(
-            ["git", "push", "origin", "main"],
+            ["git", "push", "origin", branch],
             cwd=GIT_REPO_DIR, check=True, env=env
         )
         print(f"  [git] committed and pushed {filename}")
@@ -701,12 +805,26 @@ h1, h2, .display { font-family: 'Fraunces', Georgia, serif; }
 """
 
 
+def strip_html(text):
+    """Remove HTML tags and decode common HTML entities for clean text display."""
+    if not text:
+        return ""
+    # Remove all HTML tags
+    text = re.sub(r'<[^>]+>', ' ', text)
+    # Collapse multiple spaces
+    text = re.sub(r' {2,}', ' ', text)
+    # Decode common HTML entities
+    text = text.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
+    text = text.replace("&quot;", '"').replace("&#39;", "'").replace("&nbsp;", " ")
+    return text.strip()
+
+
 def build_magazine(articles, month_str):
     story_blocks = []
     for i, art in enumerate(articles, 1):
         layout = LAYOUTS[(i - 1) % len(LAYOUTS)]
-        title = art.get("title", "")
-        description = art.get("description", "") or ""
+        title = strip_html(art.get("title", ""))
+        description = strip_html(art.get("description", "") or "")
         url = art.get("link", "#")
         block = layout.format(
             num=i,
@@ -730,7 +848,7 @@ def build_magazine(articles, month_str):
 <body>
   <header class="masthead">
     <div>
-      <div class="edition">Monthly Digest — wololo.net</div>
+      <div class="edition">Monthly Digest — Vita Homebrew Sources</div>
       <h1>PS Vita<br><em>Homebrew</em></h1>
     </div>
     <p class="tagline">{len(articles)} stories from the Vita homebrew scene. {month_str}.</p>
@@ -756,28 +874,58 @@ def main():
     month_str = now.strftime("%B %Y")
     date_str = now.strftime("%Y-%m")
 
-    print(f"Fetching PS Vita homebrew news from wololo.net...", file=os.sys.stderr)
-    xml = fetch(WOLOLO_RSS)
-    if not xml:
-        print("No feed fetched, exiting.", file=os.sys.stderr)
-        return
+    # Load URLs from the previous edition to skip duplicates
+    seen_urls = load_previously_published()
+    print(f"Fetching PS Vita homebrew news (curated feeds + wololo.net)...", file=os.sys.stderr)
+    if seen_urls:
+        print(f"  Deduping against {len(seen_urls)} URLs from last edition", file=os.sys.stderr)
 
-    articles = parse_rss(xml)
-    print(f"Fetched {len(articles)} articles", file=os.sys.stderr)
+    all_articles = fetch_curated_feeds()
+
+    # Add wololo as a separate feed
+    xml = fetch(WOLOLO_RSS)
+    if xml:
+        wololo_articles = parse_rss(xml)
+        for art in wololo_articles:
+            art["source"] = "wololo.net"
+            art["feed_key"] = "wololo"
+            art["handle"] = "wololo.net"
+        all_articles.extend(wololo_articles)
+        print(f"[ok] wololo: {len(wololo_articles)} items", file=os.sys.stderr)
+
+    # ── Deduplicate: only include items not in the previous edition ──
+    new_articles = [a for a in all_articles if a.get("link") and a["link"] not in seen_urls]
+    dropped = len(all_articles) - len(new_articles)
+    print(f"Total: {len(all_articles)} articles, {dropped} duplicates dropped, {len(new_articles)} new", file=os.sys.stderr)
+
+    # Save this edition's URLs for next time.
+    # Always grow the set (never shrink) so the baseline only accumulates.
+    # This means re-posts of old articles keep being suppressed even if
+    # the previous edition had 0 new items.
+    all_known_urls = seen_urls | {a["link"] for a in new_articles if a.get("link")}
+    save_published_urls(all_known_urls)
 
     # ── Telegram digest (stdout for cron delivery) ──
     header = f"<b>PS Vita Homebrew Update — {month_str}</b>\n"
+    header += f"<i>{len(new_articles)} new items</i>\n"
     header += "━" * 36 + "\n\n"
 
-    if not articles:
-        body = "No articles found this month."
+    if not new_articles:
+        body = "No new articles found this month."
     else:
         lines = []
-        for i, art in enumerate(articles, 1):
-            lines.append(f"<b>{i}. {art['title']}</b>")
-            if art.get("description"):
-                lines.append(f"   {art['description'][:150]}...")
-            lines.append(f"   🔗 {art['link']}\n")
+        for i, art in enumerate(new_articles[:20], 1):  # Cap at 20 for Telegram
+            # Escape every feed-derived string: parse_mode=HTML rejects raw &/</<.
+            # Truncate BEFORE escaping so a cut can't split an entity.
+            handle = html.escape(art.get("handle", ""))
+            source = html.escape(art.get("source", ""))
+            title = html.escape(strip_html(art.get("title", "")))
+            desc = html.escape(strip_html(art.get("description", "") or "")[:120])
+            lines.append(f"<b>{i}. [{source}] {handle}</b>")
+            lines.append(f"   {title}")
+            if desc:
+                lines.append(f"   {desc}...")
+            lines.append(f"   🔗 {html.escape(art['link'])}\n")
         body = "\n".join(lines)
 
     digest = header + body
@@ -788,13 +936,13 @@ def main():
         print(digest)
 
     # ── HTML magazine ──
-    if articles:
+    if new_articles:
         filename = f"magazines/{date_str}-vita.html"
         filepath = os.path.join(GIT_REPO_DIR, filename)
         page_url = f"{GH_PAGES_URL}/{date_str}-vita.html"
 
         print("Building HTML magazine...", file=os.sys.stderr)
-        html = build_magazine(articles, month_str)
+        html = build_magazine(new_articles, month_str)
 
         with open(filepath, "w") as f:
             f.write(html)
