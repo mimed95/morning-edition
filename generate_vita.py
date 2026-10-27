@@ -942,10 +942,10 @@ def main():
         page_url = f"{GH_PAGES_URL}/{date_str}-vita.html"
 
         print("Building HTML magazine...", file=os.sys.stderr)
-        html = build_magazine(new_articles, month_str)
+        page_html = build_magazine(new_articles, month_str)
 
         with open(filepath, "w") as f:
-            f.write(html)
+            f.write(page_html)
         print(f"  Saved to {filepath}", file=os.sys.stderr)
 
         print("Committing to git...", file=os.sys.stderr)
